@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YJ备忘录 · 给特别的你</title>
+<style>
+:root {
+  --bg: #fff9f6;
+  --paper: #ffffff;
+  --pink: #d98fa0;
+  --pink-dark: #b96e83;
+  --pink-light: #f9e7e9;
+  --rose: #f3d4d8;
+  --text: #54434a;
+  --muted: #9c858d;
+  --line: #f0e3e4;
+  --shadow: 0 12px 35px rgba(143, 91, 105, .08);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--text);
+  background:
+    radial-gradient(ellipse at 5% 5%, #fbe9eb 0, transparent 30%),
+    radial-gradient(ellipse at 100% 30%, #fff0e8 0, transparent 28%),
+    var(--bg);
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  min-height: 100vh;
+}
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible,
+textarea:focus-visible, select:focus-visible {
+  outline: 3px solid #edbdc9;
+  outline-offset: 2px;
+}
+button:disabled { opacity: .5; cursor: not-allowed; }
+.topbar {
+  max-width: 1180px;
+  margin: auto;
+  padding: 25px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-icon {
+  width: 45px; height: 45px;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #f6d9df, #fff0eb);
+  display: grid; place-items: center;
+  font-size: 23px;
+  box-shadow: 0 5px 14px #d7a4ad35;
+}
+.brand-name { font-family: Georgia, serif; font-size: 23px; letter-spacing: 1px; }
+.brand-sub { font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing: 2px; }
+.top-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn {
+  border: 1px solid var(--line);
+  color: var(--text);
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 15px;
+  transition: .2s;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 5px 13px #b77d8c20; }
+.btn-primary {
+  color: #fff;
+  background: linear-gradient(135deg, #d99baa, #c77f94);
+  border: none;
+}
+.btn-soft { background: #fff0f2; color: var(--pink-dark); border-color: #f4dfe3; }
+.btn-danger { color: #b65d70; background: #fff5f5; }
+.container { max-width: 1180px; padding: 0 24px 45px; margin: auto; }
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 37px 38px;
+  border: 1px solid #f2dfe2;
+  border-radius: 27px;
+  background: linear-gradient(115deg, #fff 0%, #fff5f3 60%, #fbe7eb 100%);
+  box-shadow: var(--shadow);
+}
+.hero::after {
+  content: "♡";
+  position: absolute;
+  right: 8%; top: -32px;
+  color: #e8bac4;
+  font: 170px Georgia, serif;
+  transform: rotate(12deg);
+  opacity: .4;
+  pointer-events: none;
+}
+.eyebrow { color: var(--pink-dark); font-size: 12px; letter-spacing: 3px; }
+.hero h1 {
+  font-family: Georgia, "Microsoft YaHei", serif;
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 500;
+  margin: 17px 0 12px;
+  letter-spacing: 1px;
+}
+.hero p { color: #927780; font-size: 14px; line-height: 1.9; max-width: 520px; margin: 0; }
+.hero-foot { margin-top: 22px; font-size: 12px; color: #b18490; letter-spacing: 1px; }
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin: 20px 0 25px;
+}
+.stat {
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  background: #ffffffc9;
+  border-radius: 18px;
+}
+.stat-label { font-size: 12px; color: var(--muted); }
+.stat-number { font-size: 27px; color: var(--pink-dark); margin-top: 8px; font-family: Georgia, serif; }
+.layout { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 22px; align-items: start; }
+.panel {
+  border: 1px solid var(--line);
+  background: #ffffffeb;
+  border-radius: 21px;
+  padding: 23px;
+  box-shadow: var(--shadow);
+}
+.panel-title { font-size: 17px; font-weight: 600; margin: 0 0 7px; }
+.panel-sub { color: var(--muted); font-size: 12px; margin-bottom: 21px; line-height: 1.7; }
+.field { margin-bottom: 15px; }
+.field label { display: block; font-size: 12px; color: #8f737d; margin-bottom: 8px; }
+.field input, .field textarea, .field select, .search-input, .filter-select {
+  width: 100%;
+  color: var(--text);
+  background: #fffafa;
+  border: 1px solid #eedfe2;
+  border-radius: 11px;
+  padding: 11px 12px;
+}
+.field input::placeholder, .field textarea::placeholder, .search-input::placeholder { color: #c4adb4; }
+.field textarea { resize: vertical; min-height: 130px; line-height: 1.8; }
+.field input:focus, .field textarea:focus, .field select:focus,
+.search-input:focus, .filter-select:focus {
+  border-color: #d9a0ad; outline: none;
+  box-shadow: 0 0 0 3px #f7e6e9;
+}
+.form-buttons { display: flex; gap: 8px; }
+.form-buttons button { flex: 1; }
+.form-note { color: #b29ba2; font-size: 11px; line-height: 1.8; margin-top: 14px; }
+.list-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 17px; }
+.list-head h2 { font-size: 19px; margin: 0; font-weight: 600; }
+.count-pill { border-radius: 99px; background: #fff0f2; color: var(--pink-dark); padding: 5px 10px; font-size: 11px; white-space: nowrap; }
+.tools { display: grid; grid-template-columns: minmax(0, 1fr) 155px; gap: 10px; margin-bottom: 20px; }
+.memo-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.memo-card {
+  border: 1px solid #f0e2e4;
+  border-radius: 17px;
+  padding: 19px;
+  background: linear-gradient(150deg, #fff 70%, #fff8f7);
+  transition: .22s;
+  min-width: 0;
+  animation: appear .3s ease both;
+}
+.memo-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px #b77d8c17; }
+@keyframes appear { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.card-top { display: flex; justify-content: space-between; align-items: start; gap: 8px; }
+.category {
+  display: inline-block;
+  background: #fff0f2;
+  color: #b77c8b;
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-size: 11px;
+}
+.card-date { color: #b7a0a7; font-size: 11px; margin-top: 4px; text-align: right; }
+.card-title { font-size: 16px; line-height: 1.55; margin: 15px 0 9px; overflow-wrap: anywhere; }
+.card-content {
+  color: #8c777e; font-size: 13px; line-height: 1.9;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden;
+  min-height: 24px;
+}
+.card-bottom { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 16px; padding-top: 12px; border-top: 1px dashed #f0e0e3; }
+.card-actions { display: flex; gap: 6px; }
+.small-btn { background: #fff; border: 1px solid #f0e0e3; color: #987d86; border-radius: 8px; padding: 6px 9px; font-size: 11px; }
+.small-btn:hover { background: #fff0f2; color: var(--pink-dark); }
+.heart { color: #d99baa; font-size: 14px; }
+.empty {
+  grid-column: 1 / -1;
+  padding: 50px 20px; text-align: center;
+  border: 1px dashed #e9cfd5; border-radius: 17px; background: #fffaf9;
+}
+.empty-icon { font-size: 38px; margin-bottom: 12px; }
+.empty-title { color: #866c75; font-size: 15px; }
+.empty-desc { color: #b29ba2; font-size: 12px; margin-top: 8px; line-height: 1.8; }
+.footer { text-align: center; color: #b69da5; font-size: 11px; padding: 28px 0 0; line-height: 2; }
+.modal-backdrop {
+  display: none; position: fixed; inset: 0; z-index: 10;
+  padding: 20px; background: #46333d55;
+  align-items: center; justify-content: center;
+}
+.modal-backdrop.show { display: flex; }
+.modal {
+  width: min(540px, 100%); max-height: 85vh; overflow: auto;
+  padding: 25px; background: #fffaf9; border: 1px solid #f0dfe3;
+  border-radius: 22px; box-shadow: 0 25px 80px #39202b30;
+}
+.modal h2 { margin: 0 0 8px; font-size: 20px; }
+.modal-date { font-size: 12px; color: #b08a96; margin-bottom: 18px; }
+.modal-content { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 2; color: #705d65; font-size: 14px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; }
+.toast {
+  position: fixed; z-index: 30; bottom: 25px; left: 50%;
+  transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+  padding: 12px 19px; border-radius: 12px; color: #fff;
+  background: #765461; box-shadow: 0 8px 25px #76546135;
+  transition: .25s; font-size: 13px; max-width: calc(100% - 30px);
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+@media (max-width: 820px) {
+  .layout { grid-template-columns: 1fr; }
+  .memo-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .topbar { padding: 18px 15px; align-items: flex-start; flex-direction: column; }
+  .container { padding: 0 15px 30px; }
+  .top-actions { width: 100%; }
+  .top-actions .btn { flex: 1; padding: 9px 8px; font-size: 12px; }
+  .hero { padding: 27px 23px; border-radius: 22px; }
+  .hero::after { right: -15px; top: 5px; font-size: 105px; }
+  .stats { gap: 8px; }
+  .stat { padding: 14px 12px; }
+  .stat-number { font-size: 23px; }
+  .panel { padding: 18px; }
+  .memo-list { grid-template-columns: 1fr; }
+  .tools { grid-template-columns: 1fr; }
+  .list-head h2 { font-size: 17px; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-icon">♡</div>
+    <div>
+      <div class="brand-name">YJ备忘录</div>
+      <div class="brand-sub">A LITTLE UNIVERSE FOR YOU</div>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button class="btn" id="exportBtn">↗ 导出备份</button>
+    <button class="btn" id="importBtn">↙ 导入备份</button>
+    <input type="file" id="importFile" accept=".json,application/json" hidden>
+    <button class="btn btn-primary" id="newBtn">＋ 写一条记录</button>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <div class="eyebrow">TO MY FAVORITE PERSON · ♡</div>
+    <h1>把关于你的点滴，<br>都认真收藏起来。</h1>
+    <p>喜欢的东西、小小的愿望、一起走过的日子，<br>
+    还有那些当下没说出口，却一直放在心里的话。</p>
+    <div class="hero-foot">✿ 每一件小事，都值得被温柔记住。</div>
+  </section>
+
+  <section class="stats">
+    <div class="stat">
+      <div class="stat-label">收藏的小事</div>
+      <div class="stat-number" id="totalCount">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">我们的回忆</div>
+      <div class="stat-number" id="memoryCount">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">写给她的话</div>
+      <div class="stat-number" id="letterCount">0</div>
+    </div>
+  </section>
+
+  <div class="layout">
+    <aside class="panel" id="editorPanel">
+      <h2 class="panel-title" id="formHeading">写下一件小事</h2>
+      <div class="panel-sub" id="formSub">不用着急，慢慢写。值得记住的事情从来不嫌小。</div>
+
+      <form id="memoForm">
+        <div class="field">
+          <label for="memoTitle">这条记录的名字</label>
+          <input id="memoTitle" name="title" maxlength="120"
+            placeholder="例如：她最喜欢的那束花" required>
+        </div>
+        <div class="field">
+          <label for="memoCategory">选择一个分类</label>
+          <select id="memoCategory" name="category">
+            <option value="她的喜好">♡ 她的喜好</option>
+            <option value="她的小愿望">✧ 她的小愿望</option>
+            <option value="我们的回忆">☁ 我们的回忆</option>
+            <option value="纪念日">✿ 纪念日</option>
+            <option value="写给她的话">✉ 写给她的话</option>
+            <option value="其他">❀ 其他</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="memoDate">日期</label>
+          <input id="memoDate" name="date" type="date" required>
+        </div>
+        <div class="field">
+          <label for="memoContent">想记录的内容</label>
+          <textarea id="memoContent" name="content"
+            placeholder="比如她无意间说过的话、某一天的小惊喜，或者你想留给她的文字……"
+            maxlength="10000"></textarea>
+        </div>
+        <div class="form-buttons">
+          <button class="btn btn-primary" type="submit" id="saveBtn">♡ 收藏这件小事</button>
+          <button class="btn" type="button" id="cancelEditBtn" hidden>取消</button>
+        </div>
+      </form>
+      <div class="form-note">✿ 这份小小的收藏，只保存在你自己的浏览器里。</div>
+    </aside>
+
+    <section class="panel">
+      <div class="list-head">
+        <h2>那些值得记住的事</h2>
+        <span class="count-pill" id="resultCount">0 条记录</span>
+      </div>
+      <div class="tools">
+        <input class="search-input" id="searchInput" type="search"
+          placeholder="⌕ 搜一搜标题或内容……" aria-label="搜索备忘录">
+        <select class="filter-select" id="filterCategory" aria-label="按分类筛选">
+          <option value="">全部分类</option>
+          <option value="她的喜好">她的喜好</option>
+          <option value="她的小愿望">她的小愿望</option>
+          <option value="我们的回忆">我们的回忆</option>
+          <option value="纪念日">纪念日</option>
+          <option value="写给她的话">写给她的话</option>
+          <option value="其他">其他</option>
+        </select>
+      </div>
+      <div class="memo-list" id="memoList"></div>
+    </section>
+  </div>
+
+  <footer class="footer">
+    MADE WITH CARE · YJ备忘录<br>
+    <span>愿你记住的每一个瞬间，都有它温柔的意义。 ♡</span>
+  </footer>
+</main>
+
+<div class="modal-backdrop" id="detailModal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+  <div class="modal">
+    <h2 id="detailTitle"></h2>
+    <div class="modal-date" id="detailMeta"></div>
+    <div class="modal-content" id="detailContent"></div>
+    <div class="modal-actions">
+      <button class="btn" id="detailCloseBtn">合上这页</button>
+      <button class="btn btn-primary" id="detailEditBtn">编辑这条记录</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  "use strict";
+
+  // 重要：保留旧版本的存储标识，才能读取之前保存的数据。
+  const STORAGE_KEY = "my_girl_memo_v1";
+  const CATEGORIES = [
+    "她的喜好", "她的小愿望", "我们的回忆",
+    "纪念日", "写给她的话", "其他"
+  ];
+
+  const $ = id => document.getElementById(id);
+  const form = $("memoForm");
+  const titleInput = $("memoTitle");
+  const categoryInput = $("memoCategory");
+  const dateInput = $("memoDate");
+  const contentInput = $("memoContent");
+  const list = $("memoList");
+  const searchInput = $("searchInput");
+  const filterCategory = $("filterCategory");
+
+  let records = [];
+  let editingId = null;
+  let detailId = null;
+  let toastTimer = null;
+
+  function makeId() {
+    return Date.now().toString(36) + "-" +
+      Math.random().toString(36).slice(2, 10);
+  }
+
+  function today() {
+    const now = new Date();
+    const offset = now.getTimezoneOffset();
+    return new Date(now.getTime() - offset * 60000)
+      .toISOString().slice(0, 10);
+  }
+
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, ch => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;",
+      '"': "&quot;", "'": "&#39;"
+    })[ch]);
+  }
+
+  function normalizeRecord(item) {
+    if (!item || typeof item !== "object") return null;
+    const title = String(item.title ?? "").trim();
+    if (!title) return null;
+
+    let date = String(item.date ?? today());
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) date = today();
+
+    const rawCategory = String(item.category ?? "其他");
+    const category = CATEGORIES.includes(rawCategory)
+      ? rawCategory : "其他";
+
+    return {
+      id: String(item.id ?? makeId()),
+      title: title.slice(0, 120),
+      category,
+      date,
+      content: String(item.content ?? "").slice(0, 10000),
+      createdAt: item.createdAt ?? new Date().toISOString(),
+      updatedAt: item.updatedAt ?? null
+    };
+  }
+
+  function loadRecords() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      // 兼容旧版保存的数组，以及包在 records 字段中的备份格式。
+      const source = Array.isArray(parsed)
+        ? parsed
+        : (parsed && Array.isArray(parsed.records) ? parsed.records : []);
+      return source.map(normalizeRecord).filter(Boolean);
+    } catch (error) {
+      console.error("读取本地备忘录失败：", error);
+      alert("读取本地记录时出现问题。请不要清除浏览器数据；可以先尝试导入之前导出的 JSON 备份。");
+      return [];
+    }
+  }
+
+  function persist() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      return true;
+    } catch (error) {
+      console.error("保存本地备忘录失败：", error);
+      alert("保存失败，可能是浏览器存储空间不足或被限制。请先导出备份，并检查浏览器设置。");
+      return false;
+    }
+  }
+
+  function showToast(message) {
+    const toast = $("toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 2400);
+  }
+
+  function categoryLabel(category) {
+    const icons = {
+      "她的喜好": "♡",
+      "她的小愿望": "✧",
+      "我们的回忆": "☁",
+      "纪念日": "✿",
+      "写给她的话": "✉",
+      "其他": "❀"
+    };
+    return (icons[category] || "❀") + " " + category;
+  }
+
+  function renderStats() {
+    $("totalCount").textContent = records.length;
+    $("memoryCount").textContent =
+      records.filter(r => r.category === "我们的回忆").length;
+    $("letterCount").textContent =
+      records.filter(r => r.category === "写给她的话").length;
+  }
+
+  function render() {
+    renderStats();
+
+    const keyword = searchInput.value.trim().toLocaleLowerCase();
+    const category = filterCategory.value;
+
+    const filtered = records
+      .filter(r => !category || r.category === category)
+      .filter(r => !keyword ||
+        r.title.toLocaleLowerCase().includes(keyword) ||
+        r.content.toLocaleLowerCase().includes(keyword) ||
+        r.category.toLocaleLowerCase().includes(keyword))
+      .sort((a, b) =>
+        (b.date || "").localeCompare(a.date || "") ||
+        String(b.createdAt || "").localeCompare(String(a.createdAt || ""))
+      );
+
+    $("resultCount").textContent = filtered.length + " 条记录";
+
+    if (!filtered.length) {
+      const hasFilters = keyword || category;
+      list.innerHTML = `
+        <div class="empty">
+          <div class="empty-icon">${hasFilters ? "⌕" : "♡"}</div>
+          <div class="empty-title">${hasFilters ? "没有找到相关记录" : "这里还空着，等你来收藏"}</div>
+          <div class="empty-desc">${hasFilters
+            ? "换一个关键词，或者试试其他分类吧。"
+            : "写下她喜欢的东西、一起经历的事情，<br>让每一份在意都有迹可循。"
+          }</div>
+        </div>`;
+      return;
+    }
+
+    list.innerHTML = filtered.map(r => `
+      <article class="memo-card">
+        <div class="card-top">
+          <span class="category">${escapeHTML(categoryLabel(r.category))}</span>
+          <span class="card-date">${escapeHTML(r.date)}</span>
+        </div>
+        <h3 class="card-title">${escapeHTML(r.title)}</h3>
+        <div class="card-content">${escapeHTML(r.content || "把这份小小的心意，留在这里。")}</div>
+        <div class="card-bottom">
+          <span class="heart">♡ 一份珍藏</span>
+          <div class="card-actions">
+            <button class="small-btn" data-action="view" data-id="${escapeHTML(r.id)}">查看</button>
+            <button class="small-btn" data-action="edit" data-id="${escapeHTML(r.id)}">编辑</button>
+            <button class="small-btn" data-action="delete" data-id="${escapeHTML(r.id)}">删除</button>
+          </div>
+        </div>
+      </article>
+    `).join("");
+  }
+
+  function resetForm() {
+    editingId = null;
+    form.reset();
+    dateInput.value = today();
+    $("formHeading").textContent = "写下一件小事";
+    $("formSub").textContent = "不用着急，慢慢写。值得记住的事情从来不嫌小。";
+    $("saveBtn").textContent = "♡ 收藏这件小事";
+    $("cancelEditBtn").hidden = true;
+  }
+
+  function startEdit(id) {
+    const record = records.find(r => r.id === id);
+    if (!record) return;
+
+    editingId = record.id;
+    titleInput.value = record.title;
+    categoryInput.value = record.category;
+    dateInput.value = record.date;
+    contentInput.value = record.content;
+
+    $("formHeading").textContent = "重新整理这份记忆";
+    $("formSub").textContent = "有些细节，值得被写得更完整一点。";
+    $("saveBtn").textContent = "保存修改";
+    $("cancelEditBtn").hidden = false;
+
+    $("detailModal").classList.remove("show");
+    $("editorPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+    titleInput.focus({ preventScroll: true });
+  }
+
+  function showDetail(id) {
+    const r = records.find(item => item.id === id);
+    if (!r) return;
+
+    detailId = r.id;
+    $("detailTitle").textContent = r.title;
+    $("detailMeta").textContent = categoryLabel(r.category) + " · " + r.date;
+    $("detailContent").textContent = r.content || "把这份小小的心意，留在这里。";
+    $("detailModal").classList.add("show");
+    $("detailCloseBtn").focus();
+  }
+
+  function deleteRecord(id) {
+    const record = records.find(r => r.id === id);
+    if (!record) return;
+
+    if (!confirm("确定要删除「" + record.title + "」吗？删除后无法直接撤销，建议先备份重要记录。")) {
+      return;
+    }
+
+    const previous = records;
+    records = records.filter(r => r.id !== id);
+    if (!persist()) {
+      records = previous;
+      render();
+      return;
+    }
+
+    if (editingId === id) resetForm();
+    if (detailId === id) $("detailModal").classList.remove("show");
+    render();
+    showToast("这条记录已删除");
+  }
+
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+
+    const title = titleInput.value.trim();
+    if (!title) {
+      titleInput.focus();
+      showToast("先给这条记录起个名字吧");
+      return;
+    }
+
+    const now = new Date().toISOString();
+
+    if (editingId) {
+      const index = records.findIndex(r => r.id === editingId);
+      if (index < 0) {
+        showToast("没有找到要编辑的记录");
+        resetForm();
+        return;
+      }
+
+      const oldRecord = records[index];
+      records[index] = {
+        ...oldRecord,
+        title,
+        category: categoryInput.value,
+        date: dateInput.value || today(),
+        content: contentInput.value,
+        updatedAt: now
+      };
+
+      if (!persist()) {
+        records[index] = oldRecord;
+        return;
+      }
+      resetForm();
+      render();
+      showToast("已经把修改好好收藏起来了 ♡");
+    } else {
+      const record = {
+        id: makeId(),
+        title,
+        category: categoryInput.value,
+        date: dateInput.value || today(),
+        content: contentInput.value,
+        createdAt: now,
+        updatedAt: null
+      };
+
+      records.push(record);
+      if (!persist()) {
+        records = records.filter(r => r.id !== record.id);
+        return;
+      }
+      resetForm();
+      render();
+      showToast("新的一份珍藏，已经收好 ♡");
+    }
+  });
+
+  $("cancelEditBtn").addEventListener("click", resetForm);
+
+  $("newBtn").addEventListener("click", () => {
+    resetForm();
+    $("editorPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+    titleInput.focus({ preventScroll: true });
+  });
+
+  list.addEventListener("click", event => {
+    const button = event.target.closest("button[data-action]");
+    if (!button) return;
+    const { action, id } = button.dataset;
+
+    if (action === "view") showDetail(id);
+    if (action === "edit") startEdit(id);
+    if (action === "delete") deleteRecord(id);
+  });
+
+  $("detailCloseBtn").addEventListener("click", () => {
+    $("detailModal").classList.remove("show");
+  });
+
+  $("detailEditBtn").addEventListener("click", () => {
+    if (detailId) startEdit(detailId);
+  });
+
+  $("detailModal").addEventListener("click", event => {
+    if (event.target === $("detailModal")) {
+      $("detailModal").classList.remove("show");
+    }
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+      $("detailModal").classList.remove("show");
+    }
+  });
+
+  searchInput.addEventListener("input", render);
+  filterCategory.addEventListener("change", render);
+
+  $("exportBtn").addEventListener("click", () => {
+    const backup = {
+      app: "YJ备忘录",
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      records
+    };
+
+    const blob = new Blob(
+      [JSON.stringify(backup, null, 2)],
+      { type: "application/json;charset=utf-8" }
+    );
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const stamp = today();
+    link.href = url;
+    link.download = "YJ备忘录-备份-" + stamp + ".json";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    showToast("备份文件已生成，请妥善保存");
+  });
+
+  $("importBtn").addEventListener("click", () => {
+    $("importFile").click();
+  });
+
+  $("importFile").addEventListener("change", async event => {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text);
+      const source = Array.isArray(parsed)
+        ? parsed
+        : (parsed && Array.isArray(parsed.records) ? parsed.records : null);
+
+      if (!source) {
+        throw new Error("文件格式不正确：没有找到记录列表。");
+      }
+
+      const imported = source.map(normalizeRecord).filter(Boolean);
+
+      if (source.length > 0 && imported.length === 0) {
+        throw new Error("文件中没有可识别的有效记录。");
+      }
+
+      const merge = confirm(
+        "读取到 " + imported.length + " 条有效记录。\n\n" +
+        "点击“确定”：合并到现有记录中，遇到相同 ID 时以导入内容为准。\n" +
+        "点击“取消”：继续选择是否替换全部现有记录。"
+      );
+
+      let nextRecords;
+
+      if (merge) {
+        const map = new Map(records.map(r => [r.id, r]));
+        imported.forEach(r => map.set(r.id, r));
+        nextRecords = Array.from(map.values());
+      } else {
+        const replace = confirm(
+          "是否确定用备份中的记录替换当前全部记录？\n\n" +
+          "点击“确定”执行替换；点击“取消”则放弃导入。"
+        );
+        if (!replace) {
+          showToast("已取消导入");
+          return;
+        }
+        nextRecords = imported;
+      }
+
+      const previous = records;
+      records = nextRecords;
+
+      if (!persist()) {
+        records = previous;
+        render();
+        return;
+      }
+
+      resetForm();
+      render();
+      showToast("导入完成，共 " + imported.length + " 条记录");
+    } catch (error) {
+      console.error("导入备份失败：", error);
+      alert("导入失败：" + (error.message || "文件无法读取") +
+        "\n请确认选择的是 YJ备忘录 导出的 JSON 备份文件。");
+    } finally {
+      event.target.value = "";
+    }
+  });
+
+  // 首次打开时读取旧版数据，不覆盖已有记录。
+  records = loadRecords();
+  dateInput.value = today();
+  render();
+})();
+</script>
+</body>
+</html>
